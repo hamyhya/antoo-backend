@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
+require("dotenv").config();
 const { APP_PORT } = process.env;
 
 app.use(
@@ -14,6 +15,8 @@ app.use(
 app.use(morgan("dev"));
 app.use(cors());
 app.use("/public", express.static("public"));
+
+app.use("/auth", require("./src/routes/auth"));
 
 app.listen(APP_PORT, (err) => {
   if (err) {
