@@ -32,4 +32,17 @@ module.exports = {
         "Password, Confirm password, and email must be required"
       );
   },
+  activation: async (request) => {
+    const { otp } = request;
+    if (!validator.isEmpty(otp)) {
+      const existsCheck = await exists({ otp });
+      if (!existsCheck) {
+        return throwValidator(false, "Otp is not valid");
+      } else {
+        return throwValidator(true, "Success", existsCheck);
+      }
+    } else {
+      return throwValidator(false, "Otp is required");
+    }
+  },
 };
