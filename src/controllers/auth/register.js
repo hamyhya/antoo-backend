@@ -9,14 +9,9 @@ const path = require("path");
 const bcrypt = require("bcryptjs");
 
 module.exports = async (req, res) => {
-  const { email } = req.body;
-
   const registerValidator = await authValidator.register(req.body);
   if (registerValidator.status) {
-    const {
-      email: emailPassed,
-      password: passwordPassed,
-    } = registerValidator.passed;
+    const { email, password } = registerValidator.passed;
     try {
       const template = await fs.readFileSync(
         path.join(__dirname, "../../templates/email.html"),
@@ -24,8 +19,8 @@ module.exports = async (req, res) => {
       );
       const code = await OTPGenerator(4);
       const registeredUser = await register({
-        email: emailPassed,
-        password: bcrypt.hashSync(passwordPassed, 12),
+        email,
+        password: bcrypt.hashSync(password, 12),
         otp: code,
       });
       emailSender({
