@@ -1,8 +1,9 @@
 const validator = require("validator");
+const exists = require("../models/auth/exists");
 const { throw: throwValidator } = require("./validator");
 
 module.exports = {
-  register: (request) => {
+  register: async (request) => {
     const { password, confirm_password: cpassword, email } = request;
     if (
       !validator.isEmpty(password) &&
@@ -10,11 +11,16 @@ module.exports = {
       !validator.isEmpty(email)
     )
       if (validator.equals(password, cpassword) && validator.isEmail(email)) {
-        return throwValidator(true, "Success", {
-          email: validator.escape(email),
-          password: validator.escape(password),
-          confirm_password: validator.escape(cpassword),
-        });
+        const existsCheck = await exists({ email: email });
+        if (existsCheck) {
+          return throwValidator(false, "Email has been taken by another user");
+        } else {
+          return throwValidator(true, "Success", {
+            email: validator.escape(email),
+            password: validator.escape(password),
+            confirm_password: validator.escape(cpassword),
+          });
+        }
       } else
         return throwValidator(
           false,

@@ -11,7 +11,7 @@ const bcrypt = require("bcryptjs");
 module.exports = async (req, res) => {
   const { email } = req.body;
 
-  const registerValidator = authValidator.register(req.body);
+  const registerValidator = await authValidator.register(req.body);
   if (registerValidator.status) {
     const {
       email: emailPassed,
@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
         }),
       }).then(() => {
         res
-          .status(200)
+          .status(201)
           .send(response(true, registerValidator.msg, registeredUser));
       });
     } catch (e) {
