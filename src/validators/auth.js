@@ -79,7 +79,7 @@ module.exports = {
     else
       return throwValidator(
         false,
-        "Password, Confirm password, and email must be required"
+        "Email, and Password must be required"
       );
   }
 
