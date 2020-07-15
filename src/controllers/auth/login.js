@@ -9,6 +9,7 @@ module.exports = async (req, res) => {
   const loginValidator = await authValidator.login(req.body);
   if (loginValidator.status) {
     const { id, email } = loginValidator.passed;
+    req.body.id = id;
     try {
       const loggedInUser = {
         id,
