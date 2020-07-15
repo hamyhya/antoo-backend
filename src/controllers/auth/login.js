@@ -5,8 +5,8 @@ const authValidator = require("../../validators/auth");
 
 const { APP_KEY } = process.env;
 
-module.exports = (req, res) => {
-  const loginValidator = authValidator.login(req.body);
+module.exports = async (req, res) => {
+  const loginValidator = await authValidator.login(req.body);
   if (loginValidator.status) {
     const { id, email, password } = loginValidator.passed;
     try {
