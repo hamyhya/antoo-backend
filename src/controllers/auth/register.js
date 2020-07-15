@@ -30,11 +30,17 @@ module.exports = async (req, res) => {
           email,
           code,
         }),
-      }).then(() => {
-        res
-          .status(201)
-          .send(response(true, registerValidator.msg, registeredUser));
-      });
+      })
+        .then(() => {
+          res
+            .status(201)
+            .send(response(true, registerValidator.msg, registeredUser));
+        })
+        .catch(() => {
+          res
+            .status(500)
+            .send(response(false, "Error email server", registeredUser));
+        });
     } catch (e) {
       res.status(500).send(response(false, e.message));
     }

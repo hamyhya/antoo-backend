@@ -1,5 +1,6 @@
 const validator = require("validator");
 const exists = require("../models/auth/exists");
+const existsOtp = require("../models/auth/existsOTP");
 const { throw: throwValidator } = require("./validator");
 
 module.exports = {
@@ -35,7 +36,7 @@ module.exports = {
   activation: async (request) => {
     const { otp } = request;
     if (!validator.isEmpty(otp)) {
-      const existsCheck = await exists({ otp });
+      const existsCheck = await existsOtp(otp, false);
       if (!existsCheck) {
         return throwValidator(false, "Otp is not valid");
       } else {

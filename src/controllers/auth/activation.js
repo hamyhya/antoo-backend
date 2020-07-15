@@ -3,19 +3,16 @@ const { activation: activationValidator } = require("../../validators/auth");
 const response = require("../../utils/response");
 
 module.exports = async (req, res) => {
-  const { otp } = req.body;
-  const activationValidatorCheck = await activationValidator({ otp });
-  if (activationValidatorCheck.status) {
-    const { otp: otpPassed } = activationValidatorCheck.passed;
+  const { status, passed, msg } = await activationValidator(req.body);
+  if (status) {
+    const { otp } = passed;
     try {
-      await activation({ otp: otpPassed });
-      res
-        .status(200)
-        .send(response(true, activationValidatorCheck.msg, { otp: otpPassed }));
+      await activation({ otp });
+      res.status(200).send(response(true, msg, { otp }));
     } catch (e) {
-      res.status(500).send(response(false, acactivationValidatorCheck.msg));
+      res.status(500).send(response(false, e.message));
     }
   } else {
-    res.status(400).send(response(false, acactivationValidatorCheck.msg));
+    res.status(400).send(response(false, msg));
   }
 };
