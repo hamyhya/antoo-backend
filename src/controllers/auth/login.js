@@ -8,12 +8,11 @@ const { APP_KEY } = process.env;
 module.exports = async (req, res) => {
   const loginValidator = await authValidator.login(req.body);
   if (loginValidator.status) {
-    const { id, email, password } = loginValidator.passed;
+    const { id, email } = loginValidator.passed;
     try {
       const loggedInUser = {
         id,
         email,
-        password,
         token: jwt.sign(req.body, APP_KEY),
       };
       res.status(200).send(response(true, loginValidator.msg, loggedInUser));

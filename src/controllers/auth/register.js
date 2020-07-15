@@ -34,6 +34,8 @@ module.exports = async (req, res) => {
       })
         .then(() => {
           delete registeredUser.password;
+          delete registeredUser.balance;
+          delete registeredUser.isVerified;
           res
             .status(201)
             .send(response(true, registerValidator.msg, registeredUser));
