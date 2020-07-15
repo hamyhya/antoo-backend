@@ -1,4 +1,5 @@
 const register = require("../../models/auth/register");
+const deleteUser = require("../../models/auth/deleteUser");
 const authValidator = require("../../validators/auth");
 const response = require("../../utils/response");
 const emailSender = require("../../utils/emailSender");
@@ -32,11 +33,13 @@ module.exports = async (req, res) => {
         }),
       })
         .then(() => {
+          delete registeredUser.password;
           res
             .status(201)
             .send(response(true, registerValidator.msg, registeredUser));
         })
         .catch(() => {
+          deleteUser({ id: registeredUser.id });
           res
             .status(500)
             .send(response(false, "Error email server", registeredUser));
