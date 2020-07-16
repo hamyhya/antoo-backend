@@ -20,7 +20,7 @@ module.exports = (data) =>
             if (selectedUser.length > 0) {
               con.query(
                 sql2,
-                { user_id, type_id, amount, concerned: tokenPln },
+                { user_id, type_id, amount: amount * -1, concerned: tokenPln },
                 (queryError2, transactionCreated) => {
                   if (queryError2) {
                     con.rollback(() => {
