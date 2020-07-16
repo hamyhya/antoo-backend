@@ -1,3 +1,4 @@
+require("dotenv").config();
 const {
   DB_HOST: host,
   DB_USER: user,

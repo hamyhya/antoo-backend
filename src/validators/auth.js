@@ -13,15 +13,26 @@ module.exports = {
       !validator.isEmpty(email)
     )
       if (validator.equals(password, cpassword) && validator.isEmail(email)) {
-        const existsCheck = await exists({ email: email });
-        if (existsCheck) {
-          return throwValidator(false, "Email has been taken by another user");
+        const regex = new RegExp("^[0-9]{6}$");
+        if (regex.test(password)) {
+          const existsCheck = await exists({ email });
+          if (existsCheck) {
+            return throwValidator(
+              false,
+              "Email has been taken by another user"
+            );
+          } else {
+            return throwValidator(true, "Success", {
+              email: validator.escape(email),
+              password: validator.escape(password),
+              confirm_password: validator.escape(cpassword),
+            });
+          }
         } else {
-          return throwValidator(true, "Success", {
-            email: validator.escape(email),
-            password: validator.escape(password),
-            confirm_password: validator.escape(cpassword),
-          });
+          return throwValidator(
+            false,
+            "Password only 6 digits and numeric only"
+          );
         }
       } else
         return throwValidator(
