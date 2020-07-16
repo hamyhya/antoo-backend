@@ -92,4 +92,46 @@ module.exports = {
       );
     }
   },
+  paymentPln: async (request) => {
+    const { user_id, amount, tokenPln } = request;
+
+    if (!validator.isEmpty(amount)) {
+      if (Number.isInteger(parseInt(amount))) {
+        if (amount > 0) {
+          const { balance } = await exists({ id: user_id });
+          if (amount <= balance) {
+            return throwValidator(true, "Success", {
+              user_id,
+              amount,
+              tokenPln,
+            });
+          } else {
+            return throwValidator(false, "Less balance", {
+              user_id,
+              amount,
+              tokenPln,
+            });
+          }
+        } else {
+          return throwValidator(false, "Amount must be more than 0", {
+            user_id,
+            amount,
+            tokenPln,
+          });
+        }
+      } else {
+        return throwValidator(false, "Amount must be integer", {
+          user_id,
+          amount,
+          tokenPln,
+        });
+      }
+    } else {
+      return throwValidator(false, "Amount must be required", {
+        user_id,
+        amount,
+        tokenPln,
+      });
+    }
+  },
 };

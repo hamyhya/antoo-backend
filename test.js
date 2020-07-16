@@ -1,2 +1,7 @@
-const regex = new RegExp("^[0-9]{4}$");
-console.log(regex.test("1234"));
+const plnGenerator = require("./src/utils/plnGenerator");
+const test = async () => {
+  const test = await plnGenerator(20);
+  console.log(test);
+};
+
+test();
