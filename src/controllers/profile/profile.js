@@ -10,18 +10,11 @@ module.exports = {
   createProfile: (req, res) => {
     upload(req, res, async (fileError) => {
       if (req.fileValidationError) {
-        res.status(400).send(response(
-          false, req.fileValidationError
-        ));
+        res.status(400).send(response(false, req.fileValidationError));
       } else if (fileError instanceof multer.MulterError) {
-        res.status(400).send(response(
-          false, "File size too large"
-        ));
+        res.status(400).send(response(false, "File size too large, Max 1 MB"));
       }
-      if (!req.file) {
-        res.status(400).send(response(
-          false, "Please select an image to upload"));
-      }
+      if (!req.file) { res.status(400).send(response(false, "Please select an image to upload")); }
       else {
         const profileValid = await profileValidator(req.body)
         if (profileValid.status) {
@@ -48,33 +41,29 @@ module.exports = {
   updateProfile: (req, res) => {
     upload(req, res, async (fileError) => {
       if (req.fileValidationError) {
-        res.status(400).send(response(
-          false, req.fileValidationError
-        ));
+        res.status(400).send(response(false, req.fileValidationError));
       } else if (fileError instanceof multer.MulterError) {
-        res.status(400).send(response(
-          false, "File size too large"
-        ));
+        res.status(400).send(response(false, "File size too large, Max 1 MB"));
       }
-      if (!req.file) {
-        res.status(400).send(response(
-          false, "Please select an image to upload"));
-      } else {
+      if (!req.file) { res.status(400).send(response(false, "Please select an image to upload")); }
+      else {
+        const { id } = req.me
         const userExist = await getProfileById({ user_id: parseInt(id) })
+        console.log(userExist)
         if (userExist) {
           const profileValid = await profileValidator(req.body)
           if (profileValid.status) {
-            const { id } = req.me
             const { full_name, phone_number } = profileValid.passed;
             const data = {
-              user_id,
+              user_id: id,
               full_name,
               image: "public/" + req.file.filename,
               phone_number
             };
             try {
-              const createProfile = await update([data, { id: parseInt(id) }])
-              res.status(201).send(response(true, profileValid.msg, createProfile));
+              const createProfile = await update([data, { user_id: parseInt(id) }])
+              console.log(createProfile)
+              res.status(201).send(response(true, profileValid.msg, createProfile[0]));
             } catch (e) {
               res.status(500).send(response(false, e.message));
             }
