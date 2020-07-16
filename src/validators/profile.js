@@ -9,8 +9,9 @@ module.exports = async (request) => {
     !validator.isEmpty(fullName) &&
     !validator.isEmpty(phoneNumber)
   ) if (
-      !validator.contain(fullName, symbol) &&
-      !validator.isNumeric(phoneNumber)
+      !validator.contains(fullName, symbol) &&
+      !validator.isNumeric(fullName) &&
+      validator.isNumeric(phoneNumber)
     ) {
       return throwValidator(true, "Success", {
         full_name: validator.escape(fullName),

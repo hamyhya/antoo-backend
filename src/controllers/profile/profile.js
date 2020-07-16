@@ -1,4 +1,5 @@
 const multer = require("multer")
+const upload = require("../../utils/multer")
 const profileValidator = require("../../validators/profile");
 const response = require("../../utils/response");
 const create = require("../../models/profile/createProfile");
@@ -8,11 +9,7 @@ const getProfileById = require("../../models/profile/getProfileById");
 module.exports = {
   createProfile: (req, res) => {
     upload(req, res, async (fileError) => {
-      if (!req.file) {
-        res.status(400).send(response(
-          false, "Please select an image to upload"));
-      }
-      else if (req.fileValidationError) {
+      if (req.fileValidationError) {
         res.status(400).send(response(
           false, req.fileValidationError
         ));
@@ -20,8 +17,13 @@ module.exports = {
         res.status(400).send(response(
           false, "File size too large"
         ));
-      } else {
-        const profileValid = profileValidator(req.body)
+      }
+      if (!req.file) {
+        res.status(400).send(response(
+          false, "Please select an image to upload"));
+      }
+      else {
+        const profileValid = await profileValidator(req.body)
         if (profileValid.status) {
           const { id: user_id } = req.me
           const { full_name, phone_number } = profileValid.passed;
@@ -45,11 +47,7 @@ module.exports = {
   },
   updateProfile: (req, res) => {
     upload(req, res, async (fileError) => {
-      if (!req.file) {
-        res.status(400).send(response(
-          false, "Please select an image to upload"));
-      }
-      else if (req.fileValidationError) {
+      if (req.fileValidationError) {
         res.status(400).send(response(
           false, req.fileValidationError
         ));
@@ -57,12 +55,16 @@ module.exports = {
         res.status(400).send(response(
           false, "File size too large"
         ));
+      }
+      if (!req.file) {
+        res.status(400).send(response(
+          false, "Please select an image to upload"));
       } else {
-        const { id } = req.params
         const userExist = await getProfileById({ user_id: parseInt(id) })
         if (userExist) {
-          const profileValid = profileValidator(req.body)
+          const profileValid = await profileValidator(req.body)
           if (profileValid.status) {
+            const { id } = req.me
             const { full_name, phone_number } = profileValid.passed;
             const data = {
               user_id,
