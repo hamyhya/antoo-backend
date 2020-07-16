@@ -12,6 +12,9 @@ app.use(
     extended: false,
   })
 );
+app.use(
+  bodyParser.json()
+);
 app.use(morgan("dev"));
 app.use(cors());
 app.use("/public", express.static("public"));
