@@ -21,4 +21,7 @@ module.exports = {
       res.status(500).send(response(false, e.message))
     }
   }
+  // deleteUser: async (req, res) => {
+  //   
+  // }
 }

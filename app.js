@@ -23,6 +23,7 @@ app.use("/auth", require("./src/routes/auth"));
 app.use("/transaction", require("./src/routes/transaction"));
 app.use("/profile", require("./src/routes/profile"));
 app.use("/user", require("./src/routes/user"));
+app.use("/promo", require("./src/routes/promo"));
 
 app.listen(APP_PORT, (err) => {
   if (err) {
