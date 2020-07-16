@@ -1,5 +1,4 @@
 const register = require("../../models/auth/register");
-const deleteUser = require("../../models/auth/deleteUser");
 const authValidator = require("../../validators/auth");
 const response = require("../../utils/response");
 const emailSender = require("../../utils/emailSender");
@@ -19,11 +18,6 @@ module.exports = async (req, res) => {
         "utf-8"
       );
       const code = await OTPGenerator(4);
-      const registeredUser = await register({
-        email,
-        password: bcrypt.hashSync(password, 12),
-        otp: code,
-      });
       emailSender({
         to: email,
         subject: "Hello, i'm from antoo e-wallet",
@@ -32,7 +26,13 @@ module.exports = async (req, res) => {
           code,
         }),
       })
-        .then(() => {
+        .then(async () => {
+          const registeredUser = await register({
+            email,
+            password: bcrypt.hashSync(password, 12),
+            otp: code,
+          });
+
           delete registeredUser.password;
           delete registeredUser.balance;
           delete registeredUser.isVerified;
@@ -40,11 +40,14 @@ module.exports = async (req, res) => {
             .status(201)
             .send(response(true, registerValidator.msg, registeredUser));
         })
-        .catch(() => {
-          deleteUser({ id: registeredUser.id });
-          res
-            .status(500)
-            .send(response(false, "Error email server", registeredUser));
+        .catch((error) => {
+          if (error) {
+            res.status(500).send(response(false, "Error email server"));
+          } else {
+            res
+              .status(500)
+              .send(response(false, "Error email server", registeredUser));
+          }
         });
     } catch (e) {
       res.status(500).send(response(false, e.message));

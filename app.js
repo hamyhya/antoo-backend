@@ -20,6 +20,7 @@ app.use("/auth", require("./src/routes/auth"));
 app.use("/transaction", require("./src/routes/transaction"));
 app.use("/profile", require("./src/routes/profile"));
 app.use("/user", require("./src/routes/user"));
+app.use("/transaction_type", require("./src/routes/transactionType"));
 
 app.listen(APP_PORT, (err) => {
   if (err) {
