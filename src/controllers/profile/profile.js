@@ -1,5 +1,5 @@
 const multer = require("multer")
-const upload = require("../../utils/multer")
+const upload = require("../../utils/multerUser")
 const profileValidator = require("../../validators/profile");
 const response = require("../../utils/response");
 const create = require("../../models/profile/createProfile");
@@ -28,7 +28,7 @@ module.exports = {
           };
           try {
             const createProfile = await create(data)
-            res.status(201).send(response(true, profileValid.msg, createProfile));
+            res.status(201).send(response(true, profileValid.msg, createProfile[0]));
           } catch (e) {
             res.status(500).send(response(false, e.message));
           }
@@ -49,7 +49,6 @@ module.exports = {
       else {
         const { id } = req.me
         const userExist = await getProfileById({ user_id: parseInt(id) })
-        console.log(userExist)
         if (userExist) {
           const profileValid = await profileValidator(req.body)
           if (profileValid.status) {
@@ -68,7 +67,7 @@ module.exports = {
               res.status(500).send(response(false, e.message));
             }
           } else { res.status(400).send(response(false, profileValid.msg)); }
-        } else { res.status(400).send(response(false, userExist)); }
+        } else { res.status(404).send(response(false, 'User Not Found')); }
       }
     });
   }
