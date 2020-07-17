@@ -49,7 +49,7 @@ module.exports = {
     });
   },
   deletePromo: async (data) => {
-    const sql = `DELETE FROM users WHERE ?`;
+    const sql = `DELETE FROM banner WHERE ?`;
     new Promise((resolve, reject) => {
       con.query(sql, data, (err, res) => {
         if (err) reject(new Error("Error database server"));

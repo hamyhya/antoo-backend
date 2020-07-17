@@ -1,5 +1,6 @@
 const getUserData = require("../../models/user/getUserData");
 const getUserDataById = require("../../models/user/getUserDataById");
+const deleteUser = require("../../models/auth/deleteUser");
 const response = require("../../utils/response")
 
 module.exports = {
@@ -20,8 +21,17 @@ module.exports = {
     } catch (e) {
       res.status(500).send(response(false, e.message))
     }
+  },
+  deleteUser: async (req, res) => {
+    const { id } = req.params
+    const userExist = await getUserDataById({ id: parseInt(id) })
+    if (userExist) {
+      try {
+        const deleteUser = await deleteUser({ id: parseInt(id) })
+        res.status(201).send(response(true, deleteUser));
+      } catch (e) {
+        res.status(500).send(response(false, e.message));
+      }
+    } else { res.status(404).send(response(false, userExist)) }
   }
-  // deleteUser: async (req, res) => {
-  //   
-  // }
 }
