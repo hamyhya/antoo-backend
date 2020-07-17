@@ -11,8 +11,10 @@ module.exports = async (data) => {
 
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
+      console.log(err)
+      console.log(res)
       if (err) reject(new Error("Internal Server Error"));
-      if (res.length < 1) (new Error(`User id:${data.id}, not Found`));
+      if (res.length < 1) reject(new Error(`User id.${data.id}, not Found`));
       else resolve(res);
     });
   });
