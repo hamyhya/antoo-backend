@@ -7,7 +7,7 @@ const response = require("../../utils/response")
 module.exports = {
   getAllPromos: async (req, res) => {
     try {
-      const getUser = await promo.getPromos();
+      const getUser = await promo.getPromos(req.query);
       res.status(200).send(response(true, "List of Promo", getUser))
     }
     catch (e) {

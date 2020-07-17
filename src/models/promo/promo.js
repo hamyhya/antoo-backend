@@ -1,8 +1,17 @@
 const con = require("../../configs/database");
 
 module.exports = {
-  getPromos: async () => {
-    const sql = "SELECT * FROM banner"
+  getPromos: async (data) => {
+    let sql = "SELECT * FROM banner "
+
+    if (data.search !== '' && data.search) {
+      sql += `WHERE title LIKE '%${data.search}%' `
+    }
+    if (data.sort) {
+      sql += `ORDER BY id ASC`
+    } else {
+      sql += `ORDER BY id DESC`
+    }
 
     return new Promise((resolve, reject) => {
       con.query(sql, (err, res) => {
