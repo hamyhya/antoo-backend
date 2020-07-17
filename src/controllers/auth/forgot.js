@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
         }),
       })
         .then(() => {
-          console.log("Email sent");
+          res.status(200).send(response(true, "Success send email", { email }));
         })
         .catch((err) => {
           res
