@@ -14,13 +14,14 @@ module.exports = async (req, res) => {
     const { email, password } = registerValidator.passed;
     try {
       const template = await fs.readFileSync(
-        path.join(__dirname, "../../templates/email.html"),
+        path.join(__dirname, "../../templates/OTPVerification.html"),
         "utf-8"
       );
       const code = await OTPGenerator(4);
       emailSender({
         to: email,
         subject: "Hello, i'm from antoo e-wallet",
+        text: "Thanks for your registration, here is your OTP",
         html: mustache.render(template, {
           email,
           code,

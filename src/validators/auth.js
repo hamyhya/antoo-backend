@@ -3,6 +3,8 @@ const exists = require("../models/auth/exists");
 const existsOtp = require("../models/auth/existsOTP");
 const { throw: throwValidator } = require("./validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 module.exports = {
   register: async (request) => {
@@ -81,5 +83,80 @@ module.exports = {
         }
       } else return throwValidator(false, "Email must be valid data");
     else return throwValidator(false, "Email, and Password must be required");
+  },
+  forgotPassword: async (request) => {
+    const { APP_KEY } = process.env;
+    const { email } = request;
+    if (!validator.isEmpty(request.email)) {
+      if (validator.isEmail(email)) {
+        const existsCheck = await exists({ email });
+        if (!existsCheck) {
+          return throwValidator(false, "Email is not found", { email });
+        } else {
+          if (existsCheck.isVerified) {
+            return throwValidator(true, "Success", {
+              email,
+              token: jwt.sign(email, APP_KEY),
+            });
+          } else {
+            return throwValidator(false, "Email is not activated", {
+              email,
+              token,
+            });
+          }
+        }
+      } else {
+        return throwValidator(false, "Email is not valid", { email });
+      }
+    } else {
+      return throwValidator(false, "Email must be required", { email });
+    }
+  },
+  resetPassword: async (request) => {
+    const { token, confirm_password, password } = request;
+    const { APP_KEY } = process.env;
+    if (
+      !validator.isEmpty(token) &&
+      !validator.isEmpty(confirm_password) &&
+      !validator.isEmpty(password)
+    ) {
+      if (validator.equals(password, confirm_password)) {
+        const regex = new RegExp("^[0-9]{6}$");
+        if (regex.test(password)) {
+          const email = jwt.decode(token, APP_KEY);
+          const isExists = await exists({ email });
+          if (isExists) {
+            return throwValidator(true, "Success", {
+              id: isExists.id,
+              email,
+              password,
+              confirm_password,
+            });
+          } else {
+            return throwValidator(false, "Email is not valid", {
+              email,
+              password,
+              confirm_password,
+            });
+          }
+        } else {
+          return throwValidator(
+            false,
+            "Password must be 6 digits and number only"
+          );
+        }
+      } else {
+        return throwValidator(
+          false,
+          "Password and confirm password is not equals",
+          { password, confirm_password }
+        );
+      }
+    } else {
+      return throwValidator(
+        false,
+        "Token, password, confirm_password must be required"
+      );
+    }
   },
 };
