@@ -1,6 +1,6 @@
 const getUserData = require("../../models/user/getUserData");
 const getUserDataById = require("../../models/user/getUserDataById");
-const deleteUser = require("../../models/auth/deleteUser");
+const deletingUser = require("../../models/auth/deleteUser");
 const response = require("../../utils/response")
 
 module.exports = {
@@ -27,8 +27,8 @@ module.exports = {
     const userExist = await getUserDataById({ id: parseInt(id) })
     if (userExist) {
       try {
-        const deleteUser = await deleteUser({ id: parseInt(id) })
-        res.status(201).send(response(true, deleteUser));
+        await deletingUser({ id: parseInt(id) })
+        res.status(201).send(response(true, "User Id." + id + " Deleted"));
       } catch (e) {
         res.status(500).send(response(false, e.message));
       }

@@ -60,9 +60,9 @@ module.exports = {
               phone_number
             };
             try {
-              const createProfile = await update([data, { user_id: parseInt(id) }])
-              console.log(createProfile)
-              res.status(201).send(response(true, profileValid.msg, createProfile[0]));
+              const updateProfile = await update([data, { user_id: parseInt(id) }])
+              // console.log(updateProfile)
+              res.status(201).send(response(true, profileValid.msg, updateProfile[0]));
             } catch (e) {
               res.status(500).send(response(false, e.message));
             }

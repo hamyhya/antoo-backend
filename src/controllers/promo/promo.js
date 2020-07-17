@@ -37,7 +37,7 @@ module.exports = {
           };
           try {
             const createPromo = await promo.createPromo(data);
-            res.status(201).send(response(true, profileValid.msg, createPromo[0]));
+            res.status(201).send(response(true, promoValid.msg, createPromo));
           } catch (e) {
             res.status(500).send(response(false, e.message));
           }
@@ -59,7 +59,7 @@ module.exports = {
       }
       else {
         const { id } = req.params;
-        const promoExist = await getPromoById({ id: parseInt(id) })
+        const promoExist = await promo.getPromoById({ id: parseInt(id) })
         if (promoExist) {
           const promoValid = await promoValidator(req.body)
           if (promoValid.status) {
@@ -71,7 +71,7 @@ module.exports = {
             };
             try {
               const updatePromo = await promo.updatePromo([data, { id: parseInt(id) }])
-              res.status(201).send(response(true, promoValid.msg, updatePromo));
+              res.status(201).send(response(true, promoValid.msg, updatePromo[0]));
             } catch (e) {
               res.status(500).send(response(false, e.message));
             }
@@ -82,11 +82,12 @@ module.exports = {
   },
   deletePromo: async (req, res) => {
     const { id } = req.params
-    const promoExist = await getPromoById({ id: parseInt(id) })
+    const promoExist = await promo.getPromoById({ id: parseInt(id) })
     if (promoExist) {
       try {
-        const deletePromo = await promo.updatePromo({ id: parseInt(id) })
-        res.status(201).send(response(true, deletePromo));
+        const deletePromo = await promo.deletePromo({ id: parseInt(id) })
+        console.log(deletePromo)
+        res.status(201).send(response(true, `Promo No.${id} Deleted`));
       } catch (e) {
         res.status(500).send(response(false, e.message));
       }
