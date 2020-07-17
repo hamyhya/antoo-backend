@@ -7,7 +7,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       con.query(sql, (err, res) => {
         if (err) reject(new Error("Internal Server Error"));
-        if (res.length < 0) reject(new Error("Promo data empty"));
+        if (res.length < 1) reject(new Error("Promo data empty"));
         else resolve(res);
       });
     });
