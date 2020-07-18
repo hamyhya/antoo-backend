@@ -21,21 +21,6 @@ module.exports = {
       });
     });
   },
-  getPromoCount: async (data) => {
-    const sql = "SELECT COUNT(*) as count FROM banner "
-
-    if (data.search !== '' && data.search) {
-      sql += `WHERE title LIKE '%${data.search}%' `
-    }
-
-    return new Promise((resolve, reject) => {
-      con.query(sql, (err, res) => {
-        if (err) reject(new Error("Internal Server Error"));
-        if (res[0].count < 1) reject(new Error("Promo data Empty"));
-        else resolve(res[0].count);
-      });
-    });
-  },
   getPromoById: async (data) => {
     const sql = "SELECT * FROM banner WHERE ?"
 

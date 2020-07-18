@@ -23,7 +23,7 @@ module.exports = {
           const data = {
             user_id,
             full_name,
-            image: "user/" + req.file.filename,
+            image: "public/" + req.file.filename,
             phone_number
           };
           try {
@@ -56,7 +56,7 @@ module.exports = {
             const data = {
               user_id: id,
               full_name,
-              image: "user/" + req.file.filename,
+              image: "public/" + req.file.filename,
               phone_number
             };
             try {
