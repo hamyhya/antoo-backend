@@ -6,7 +6,7 @@ const plnGenerator = require("../../utils/plnGenerator");
 const response = require("../../utils/response");
 
 module.exports = async (req, res) => {
-  const plnGeneratorProccess = await plnGenerator(20);
+  const plnGeneratorProccess = await plnGenerator(24);
   const paymentPlnValidatorChecked = await paymentPlnValidator({
     ...req.body,
     ...{ user_id: req.me.id, tokenPln: plnGeneratorProccess },

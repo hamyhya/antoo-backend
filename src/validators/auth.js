@@ -8,9 +8,9 @@ require("dotenv").config();
 
 module.exports = {
   register: async (request) => {
-    let password = safeString(request.password);
-    let cpassword = safeString(request.confirm_password);
-    let email = safeString(request.email);
+    const password = safeString(request.password);
+    const cpassword = safeString(request.confirm_password);
+    const email = safeString(request.email);
 
     if (
       !validator.isEmpty(password) &&
@@ -51,7 +51,7 @@ module.exports = {
       );
   },
   activation: async (request) => {
-    let otp = safeString(request.otp);
+    const otp = safeString(request.otp);
     if (!validator.isEmpty(otp)) {
       const existsCheck = await existsOtp(otp, false);
       if (!existsCheck) {
@@ -64,8 +64,8 @@ module.exports = {
     }
   },
   login: async (request) => {
-    let email = safeString(request.email);
-    let password = safeString(request.password);
+    const email = safeString(request.email);
+    const password = safeString(request.password);
     if (!validator.isEmpty(password) && !validator.isEmpty(email))
       if (validator.isEmail(email)) {
         const existsCheck = await exists({ email: email });
@@ -90,7 +90,7 @@ module.exports = {
   },
   forgotPassword: async (request) => {
     const { APP_KEY } = process.env;
-    let email = safeString(request.email);
+    const email = safeString(request.email);
     if (!validator.isEmpty(email)) {
       if (validator.isEmail(email)) {
         const existsCheck = await exists({ email });
@@ -117,9 +117,9 @@ module.exports = {
     }
   },
   resetPassword: async (request) => {
-    let password = safeString(request.password);
-    let confirm_password = safeString(request.confirm_password);
-    let token = safeString(request.token);
+    const password = safeString(request.password);
+    const confirm_password = safeString(request.confirm_password);
+    const token = safeString(request.token);
     const { APP_KEY } = process.env;
     if (
       !validator.isEmpty(token) &&

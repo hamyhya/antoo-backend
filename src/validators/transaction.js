@@ -1,10 +1,11 @@
 const validator = require("validator");
-const { throw: throwValidator } = require("./validator");
+const { throw: throwValidator, safeString } = require("./validator");
 const exists = require("../models/auth/exists");
 
 module.exports = {
   topup: (request) => {
-    const { amount, user_id } = request;
+    const amount = safeString(request.amount);
+    const user_id = safeString(request.user_id);
     if (!validator.isEmpty(amount) && !validator.isEmpty(user_id)) {
       if (Number.isInteger(parseInt(amount))) {
         if (amount > 0) {
@@ -26,7 +27,10 @@ module.exports = {
     }
   },
   transfer: async (request) => {
-    const { email_to, user_id, amount, email_from } = request;
+    const amount = safeString(request.amount);
+    const user_id = safeString(request.user_id);
+    const email_from = safeString(request.email_from);
+    const email_to = safeString(request.email_to);
 
     if (
       !validator.isEmpty(email_to) &&
@@ -93,7 +97,9 @@ module.exports = {
     }
   },
   paymentPln: async (request) => {
-    const { user_id, amount, tokenPln } = request;
+    const amount = safeString(request.amount);
+    const user_id = safeString(request.user_id);
+    const tokenPln = safeString(request.tokenPln);
 
     if (!validator.isEmpty(amount)) {
       if (Number.isInteger(parseInt(amount))) {
