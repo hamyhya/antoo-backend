@@ -1,14 +1,17 @@
 const validator = require("validator");
 const exists = require("../models/auth/exists");
 const existsOtp = require("../models/auth/existsOTP");
-const { throw: throwValidator } = require("./validator");
+const { throw: throwValidator, safeString } = require("./validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 module.exports = {
   register: async (request) => {
-    const { password, confirm_password: cpassword, email } = request;
+    let password = safeString(request.password);
+    let cpassword = safeString(request.confirm_password);
+    let email = safeString(request.email);
+
     if (
       !validator.isEmpty(password) &&
       !validator.isEmpty(cpassword) &&
@@ -48,7 +51,7 @@ module.exports = {
       );
   },
   activation: async (request) => {
-    const { otp } = request;
+    let otp = safeString(request.otp);
     if (!validator.isEmpty(otp)) {
       const existsCheck = await existsOtp(otp, false);
       if (!existsCheck) {
@@ -61,7 +64,8 @@ module.exports = {
     }
   },
   login: async (request) => {
-    const { email, password } = request;
+    let email = safeString(request.email);
+    let password = safeString(request.password);
     if (!validator.isEmpty(password) && !validator.isEmpty(email))
       if (validator.isEmail(email)) {
         const existsCheck = await exists({ email: email });
@@ -86,8 +90,8 @@ module.exports = {
   },
   forgotPassword: async (request) => {
     const { APP_KEY } = process.env;
-    const { email } = request;
-    if (!validator.isEmpty(request.email)) {
+    let email = safeString(request.email);
+    if (!validator.isEmpty(email)) {
       if (validator.isEmail(email)) {
         const existsCheck = await exists({ email });
         if (!existsCheck) {
@@ -113,7 +117,9 @@ module.exports = {
     }
   },
   resetPassword: async (request) => {
-    const { token, confirm_password, password } = request;
+    let password = safeString(request.password);
+    let confirm_password = safeString(request.confirm_password);
+    let token = safeString(request.token);
     const { APP_KEY } = process.env;
     if (
       !validator.isEmpty(token) &&

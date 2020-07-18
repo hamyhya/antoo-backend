@@ -40,10 +40,6 @@ module.exports = async (req, res) => {
       res.status(500).send(response(false, e.message));
     }
   } else {
-    return response(
-      false,
-      forgotPasswordValidatorPassed.msg,
-      forgotPasswordValidatorPassed.passed
-    );
+    res.status(400).send(response(false, forgotPasswordValidatorPassed.msg));
   }
 };

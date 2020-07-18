@@ -4,4 +4,5 @@ module.exports = {
     msg,
     passed,
   }),
+  safeString: (string) => string || "",
 };
