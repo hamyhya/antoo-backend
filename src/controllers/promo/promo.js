@@ -7,10 +7,8 @@ const pagination = require("../../utils/paginationPromo")
 
 module.exports = {
   getAllPromos: async (req, res) => {
-    const query = req.query
     try {
       const { result, pageInfo } = await pagination(
-        { search: query.search },
         req.query,
         promo.getPromos,
         promo.getPromoCount,
