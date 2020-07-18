@@ -28,8 +28,9 @@ module.exports = async (data) => {
                 sql2,
                 {
                   user_id: insertedUser.insertId,
-                  full_name: "",
-                  phone_number: "",
+                  full_name: "Yourname",
+                  phone_number: "00000000",
+                  image: "me.png",
                 },
                 (queryError2, userDetailCreated) => {
                   if (queryError2) {
