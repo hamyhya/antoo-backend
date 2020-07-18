@@ -6,7 +6,7 @@ module.exports = async (data) => {
     con.query(sql, data, (err, res) => {
       if (err) reject(new Error("Internal server error"));
       else if (res.length < 1) reject("user not found");
-      else { resolve(true); }
+      else { resolve(res[0]); }
     });
   });
 }

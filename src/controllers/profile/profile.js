@@ -20,7 +20,7 @@ module.exports = {
         const profileValid = await profileValidator(req.body)
         if (profileValid.status) {
           const { full_name, phone_number } = profileValid.passed;
-          const image = req.file ? "user/" + req.file.filename : userExist[0].image
+          const image = req.file ? "user/" + req.file.filename : userExist.image
           const data = {
             user_id: id,
             full_name,
