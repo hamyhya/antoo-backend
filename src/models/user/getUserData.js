@@ -1,6 +1,6 @@
 const con = require("../../configs/database");
 
-module.exports = async () => {
+module.exports = async (data) => {
   let sql = `SELECT users.id as id,
                     users.email as email,
                     user_details.full_name as full_name,
@@ -8,9 +8,14 @@ module.exports = async () => {
                     user_details.phone_number as phone_number
                     FROM users INNER JOIN user_details ON users.id = user_details.user_id `
 
+  if (data.id !== null && data.id) {
+    sql += `WHERE users.id=${data.id}`
+  }
+
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) reject(new Error("Internal Server Error"));
+      if (res.length < 1) reject(new Error(`User id.${data.id}, not Found`));
       else resolve(res);
     });
   });
