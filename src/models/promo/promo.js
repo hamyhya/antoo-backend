@@ -1,31 +1,33 @@
 const con = require("../../configs/database");
 
 module.exports = {
-  getPromos: async (data) => {
+  getPromos: async (query, start, limit) => {
     let sql = "SELECT * FROM banner "
 
-    if (data.search !== '' && data.search) {
-      sql += `WHERE title LIKE '%${data.search}%' `
+    if (query.search !== '' && query.search) {
+      sql += `WHERE title LIKE '%${query.search}%' `
     }
-    if (data.sort) {
-      sql += `ORDER BY id ASC`
+    if (query.sort) {
+      sql += `ORDER BY id ASC `
     } else {
-      sql += `ORDER BY id DESC`
+      sql += `ORDER BY id DESC `
     }
 
+    sql += 'LIMIT ?, ?'
+
     return new Promise((resolve, reject) => {
-      con.query(sql, (err, res) => {
+      con.query(sql, [start, limit], (err, res) => {
         if (err) reject(new Error("Internal Server Error"));
         if (res.length < 1) reject(new Error("Promo data empty"));
         else resolve(res);
       });
     });
   },
-  getPromoCount: async (data) => {
-    const sql = "SELECT COUNT(*) as count FROM banner "
+  getPromoCount: async (query) => {
+    let sql = "SELECT COUNT(*) as count FROM banner "
 
-    if (data.search !== '' && data.search) {
-      sql += `WHERE title LIKE '%${data.search}%' `
+    if (query.search !== '' && query.search) {
+      sql += `WHERE title LIKE '%${query.search}%' `
     }
 
     return new Promise((resolve, reject) => {
