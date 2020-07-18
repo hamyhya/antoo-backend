@@ -16,6 +16,9 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use(cors());
 app.use("/public", express.static("public"));
+app.use("/user", express.static("src/assets/user"));
+app.use("/banner", express.static("src/assets/banner"));
+
 
 app.use("/auth", require("./src/routes/auth"));
 app.use("/transaction", require("./src/routes/transaction"));
