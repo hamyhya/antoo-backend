@@ -8,9 +8,11 @@ module.exports = async () => {
                     user_details.phone_number as phone_number
                     FROM users INNER JOIN user_details ON users.id = user_details.user_id `
 
+
   return new Promise((resolve, reject) => {
     con.query(sql, (err, res) => {
       if (err) reject(new Error("Internal Server Error"));
+      if (res.length < 1) reject(new Error(`User empty`));
       else resolve(res);
     });
   });

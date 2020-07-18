@@ -3,12 +3,20 @@ const multer = require("multer")
 const upload = require("../../utils/multerPromo")
 const promoValidator = require("../../validators/promo");
 const response = require("../../utils/response")
+const pagination = require("../../utils/paginationPromo")
 
 module.exports = {
   getAllPromos: async (req, res) => {
+    const query = req.query
     try {
-      const getUser = await promo.getPromos(req.query);
-      res.status(200).send(response(true, "List of Promo", getUser))
+      const { result, pageInfo } = await pagination(
+        { search: query.search },
+        req.query,
+        promo.getPromos,
+        promo.getPromoCount,
+        "promo"
+      );
+      res.status(200).send(response(true, "List of promos", result, { pageInfo }));
     }
     catch (e) {
       res.status(500).send(response(false, e.message))
@@ -32,7 +40,7 @@ module.exports = {
           const { title, description } = promoValid.passed;
           const data = {
             title,
-            image: "public/" + req.file.filename,
+            image: "banner/" + req.file.filename,
             description
           };
           try {
@@ -66,7 +74,7 @@ module.exports = {
             const { title, description } = promoValid.passed;
             const data = {
               title,
-              image: "public/" + req.file.filename,
+              image: "banner/" + req.file.filename,
               description
             };
             try {
