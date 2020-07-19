@@ -6,3 +6,6 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASS=
 DB_NAME=antoo
+
+NODEMAILER_EMAIL=antoo.developers@gmail.com
+NODEMAILER_PASSWORD=sahdhdft827y@
