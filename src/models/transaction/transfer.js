@@ -133,7 +133,7 @@ module.exports = (data) =>
                                                     balance:
                                                       parseInt(
                                                         userFrom[0].balance
-                                                      ) + parseInt(amount),
+                                                      ) - parseInt(amount),
                                                     amount,
                                                   },
                                                 });
